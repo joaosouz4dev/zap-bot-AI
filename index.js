@@ -64,7 +64,7 @@ venom.create('sessionName', (base64Qr, asciiQR) => {
 function start(client) {
     client.onMessage(async message => {
         if(message.from.toString() == '554396611437@c.us'){
-            let textoResposta = await executeQueries("teste-qrscuw", message.from.toString(), message.body, 'pt-BR')
+            let textoResposta = await executeQueries("teste-qrscuw", message.from, [message.body], 'pt-BR')
             await client.sendText(message.from, textoResposta);
         }
 
