@@ -1,11 +1,10 @@
-// Supports ES6
-// import { create, Whatsapp } from 'venom-bot';
+// IMPORTANDO O VENOM E O DIALOGFLOW
 const venom = require('venom-bot');
 const dialogflow = require('@google-cloud/dialogflow');
-const fs = require('fs');
 
+// INICIANDO O DIALOGFLOW E CONFIGURANDO COM O USO DA KEY GERADA EM JSON, DEVE SE ENCONTRAR NA RAIZ DO PROJETO
 const sessionClient = new dialogflow.SessionsClient({keyFilename: "./teste-qrscuw-872f2225e85c.json"});
-
+// FUNCOES USADAS DA DOCUMENTACAO NORMAL QUE ESTAO NO README.md EM LINKS ÚTEIS
 async function detectIntent(
     projectId,
     sessionId,
@@ -39,45 +38,6 @@ async function detectIntent(
     const responses = await sessionClient.detectIntent(request);
     return responses[0];
 }
-
-const parameters = {
-    headless: true, // Headless chrome
-    devtools: false, // Open devtools by default
-    useChrome: true, // If false will use Chromium instance
-    debug: false, // Opens a debug session
-    logQR: true, // Logs QR automatically in terminal
-    browserArgs: [''], // Parameters to be added into the chrome browser instance
-    refreshQR: 15000, // Will refresh QR every 15 seconds, 0 will load QR once. Default is 30 seconds
-    autoClose: 60000, // Will auto close automatically if not synced, 'false' won't auto close. Default is 60 seconds (#Important!!! Will automatically set 'refreshQR' to 1000#)
-    disableSpins: true, // Will disable Spinnies animation, useful for containers (docker) for a better log
-}
-
-venom.create('sessionName', (base64Qr, asciiQR) => {
-    console.log(asciiQR);
-    exportQR(base64Qr, 'marketing-qr.png');
-}, (statusFind) => {
-    console.log(statusFind);
-}, parameters).then((client) => {
-      start(client);
-}).catch((erro) => console.log(erro));
-
-function start(client) {
-    client.onMessage(async message => {
-        if(message.from.toString() == '554396611437@c.us'){
-            let textoResposta = await executeQueries("teste-qrscuw", message.from, [message.body], 'pt-BR')
-            await client.sendText(message.from, textoResposta);
-        }
-
-    })
-}
-function exportQR(qrCode, path) {
-    qrCode = qrCode.replace('data:image/png;base64,', '');
-    const imageBuffer = Buffer.from(qrCode, 'base64');
-  
-    // Creates 'marketing-qr.png' file
-    fs.writeFileSync(path, imageBuffer);
-}
-
 async function executeQueries(projectId, sessionId, queries, languageCode) {
     let context;
     let intentResponse;
@@ -98,3 +58,31 @@ async function executeQueries(projectId, sessionId, queries, languageCode) {
         }
     }
 }
+// FIM DA CONFIGURACAO E FUNCOES DO DIALOGFLOW
+
+// INICIANDO O VENOM BOT
+// PARAMETROS USADO PELO VENOM
+const parameters = {
+    headless: true, // Headless chrome
+    devtools: false, // Open devtools by default
+    useChrome: true, // If false will use Chromium instance
+    debug: false, // Opens a debug session
+    logQR: true, // Logs QR automatically in terminal
+    browserArgs: [''], // Parameters to be added into the chrome browser instance
+    refreshQR: 15000, // Will refresh QR every 15 seconds, 0 will load QR once. Default is 30 seconds
+    autoClose: 60000, // Will auto close automatically if not synced, 'false' won't auto close. Default is 60 seconds (#Important!!! Will automatically set 'refreshQR' to 1000#)
+    disableSpins: true, // Will disable Spinnies animation, useful for containers (docker) for a better log
+}
+// INICIANDO CREATE DO VENOM
+venom.create('sessionName').then((client) => start(client));
+// FUNCAO START DO CLIENTE DO VENOM BOT
+function start(client) {
+    // FUNCAO QUE CAPTURA AS MENSAGEM CHEGADAS DO WPP USANDO O VENOM
+    client.onMessage(async message => {
+        // EXECUTANDO QUERY DIALOGFLOW
+        let textoResposta = await executeQueries("teste-qrscuw", message.from, [message.body], 'pt-BR')
+        // ENVIANDO QUERY RETORNADA
+        await client.sendText(message.from, textoResposta);
+    })
+}
+// FIM DO VENOM BOT
