@@ -19,7 +19,6 @@
   "dependencies": {
     "@google-cloud/dialogflow": "^3.2.0",
     "dialogflow": "^1.2.0",
-    "uuid": "^8.3.0",
     "venom-bot": "^1.1.4"
   }
 }
