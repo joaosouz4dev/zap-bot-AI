@@ -1,0 +1,25 @@
+{
+  "name": "zapbotai",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joaosouz4/zapbotAI.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/joaosouz4/zapbotAI/issues"
+  },
+  "homepage": "https://github.com/joaosouz4/zapbotAI#readme",
+  "dependencies": {
+    "@google-cloud/dialogflow": "^3.2.0",
+    "dialogflow": "^1.2.0",
+    "uuid": "^8.3.0",
+    "venom-bot": "^1.1.4"
+  }
+}
