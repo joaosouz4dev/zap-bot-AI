@@ -1,5 +1,5 @@
-// IMPORTANDO O VENOM E O DIALOGFLOW
-const venom = require('venom-bot');
+// IMPORTANDO O bot E O DIALOGFLOW
+const bot = require('@wppconnect-team/wppconnect');
 const dialogflow = require('@google-cloud/dialogflow');
 
 // INICIANDO O DIALOGFLOW E CONFIGURANDO COM O USO DA KEY GERADA EM JSON, DEVE SE ENCONTRAR NA RAIZ DO PROJETO
@@ -61,14 +61,14 @@ async function executeQueries(projectId, sessionId, queries, languageCode) {
 }
 // FIM DA CONFIGURACAO E FUNCOES DO DIALOGFLOW
 
-// INICIANDO O VENOM BOT
-// PARAMETROS USADO PELO VENOM
+// INICIANDO O bot BOT
+// PARAMETROS USADO PELO bot
 
-// INICIANDO CREATE DO VENOM
-venom.create('sessionName').then((client) => start(client));
-// FUNCAO START DO CLIENTE DO VENOM BOT
+// INICIANDO CREATE DO bot
+bot.create({sessionName: 'sessionName'}).then((client) => start(client));
+// FUNCAO START DO CLIENTE DO bot
 function start(client) {
-    // FUNCAO QUE CAPTURA AS MENSAGEM CHEGADAS DO WPP USANDO O VENOM
+    // FUNCAO QUE CAPTURA AS MENSAGEM CHEGADAS DO WPP USANDO O bot
     client.onMessage(async message => {
         // EXECUTANDO QUERY DIALOGFLOW
         let textoResposta = await executeQueries("guia-obmn", message.from, [message.body], 'pt-BR')
@@ -76,4 +76,4 @@ function start(client) {
         await client.sendText(message.from, textoResposta);
     })
 }
-// FIM DO VENOM BOT
+// FIM DO bot BOT
